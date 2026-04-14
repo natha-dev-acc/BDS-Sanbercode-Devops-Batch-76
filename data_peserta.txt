@@ -1,0 +1,7 @@
+Data Peserta Bootcamp Digital Skill Devops
+1. Nama: I Nyoman Natha Pratama
+2. Email: nathapratama123@gmail.com
+3. Sistem Operasi yang digunakan: Windows
+4. Akun Github: natha-dev-acc
+5. Akun Telegram: @natha123
+6. Bahasa Pemrograman/Stack Yang dikuasai: JavaScript, PHP
