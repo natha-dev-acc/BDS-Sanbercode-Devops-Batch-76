@@ -1,0 +1,31 @@
+1. Apa saran perbaikan dari AI?
+
+Menurut Gemini, ada 5 saran perbaikan terhadap Bash Script Backup:
+A. Penanganan Error (Error Handling): 
+Tambahkan 'set -e' agar skrip berhenti otomatis jika ada perintah yang gagal, 
+serta validasi keberadaan file sumber sebelum proses copy.
+B. Unikitas File (Timestamping): 
+Tambahkan format tanggal/waktu 
+(YYYYMMDD_HHMMSS) pada nama file backup agar tidak menimpa (overwrite) data lama.
+C. Path Absolut (Cron Job Ready): 
+Gunakan path lengkap/absolut 
+untuk direktori sumber dan tujuan agar skrip dapat dijalankan secara otomatis melalui Cron Job 
+tanpa ketergantungan pada posisi folder saat ini (working directory).
+D. Fitur Rotasi Otomatis: 
+Tambahkan logika pembersihan otomatis 
+untuk menghapus file backup yang sudah lama (misalnya lebih dari 7 hari) 
+menggunakan perintah 'find' guna menghemat ruang penyimpanan.
+E. Logging & Feedback: 
+Tambahkan pesan error yang informatif 
+jika proses gagal dan verifikasi integritas file setelah disalin.
+
+
+2. Apa pendapat Anda mengenai hasil review AI tersebut 
+(apakah Anda setuju, atau ada yang kurang pas?).
+
+Saya setuju dengan hasil review yang diberikan oleh AI, 
+bahkan menurut Saya saran tersebut berada di luar ekspektasi awal. 
+Sebelumnya, Saya hanya terpikir untuk menambahkan fitur timestamp agar file backup tidak tertimpa. 
+Namun, AI menunjukkan bahwa masih banyak aspek penting lain yang perlu diperhatikan.
+Hal ini membuat saya menyadari bahwa sebuah script sederhana pun tetap perlu dirancang dengan mempertimbangkan 
+keandalan, skalabilitas, dan penggunaan jangka panjang.
