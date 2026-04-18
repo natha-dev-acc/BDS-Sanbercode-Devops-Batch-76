@@ -1,0 +1,160 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    font-family: "Poppins";
+    box-sizing: border-box;
+}
+
+/* ===== GLOBAL LAYOUT (BIAR FOOTER NEMPEL) ===== */
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== HEADER / NAVBAR (KONSISTEN DI SEMUA HALAMAN) ===== */
+header {
+    position: fixed;           /* TODO 1 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 70px;              /* KUNCI TINGGI HEADER */
+    background-color: #203239;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;           /* padding horizontal saja */
+    z-index: 1000;
+}
+
+header img {
+    height: 40px;              /* kunci ukuran logo biar gak bikin tinggi berubah */
+    width: auto;
+    display: block;
+}
+
+/* NAVBAR */
+nav ul {
+    display: flex;             /* TODO 2 */
+    justify-content: space-evenly;
+    align-items: center;
+    list-style: none;
+    gap: 25px;
+    height: 100%;
+}
+
+nav ul li {
+    display: flex;
+    align-items: center;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    white-space: nowrap;       /* cegah teks turun baris */
+}
+
+/* ===== MAIN ===== */
+main {
+    margin-top: 70px;          /* HARUS SAMA DENGAN HEIGHT HEADER */
+    flex: 1;
+}
+
+/* ===== HERO ===== */
+.container_hero {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 40px;
+    gap: 20px;
+}
+
+.container_hero-image img {
+    width: 300px;
+}
+
+.container_hero-headline ul {
+    display: flex;             /* TODO 4 */
+    list-style: none;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* ===== DESCRIBE ===== */
+.container_describe {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 40px;
+}
+
+/* ANIMATION */
+.container_describe-animation i {
+    font-size: 50px;
+    animation: rotateIcon 2s infinite alternate;
+}
+
+@keyframes rotateIcon {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(10deg);
+    }
+}
+
+/* CARD */
+.container_describe-info__card {
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+/* ===== RIWAYAT ===== */
+.container-history {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 30px;
+}
+
+/* TABLE */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #000;
+}
+
+/* ===== PORTOFOLIO ===== */
+.container-wrapping__card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container-wrapping__card img {
+    width: 200px;
+    transition: 0.3s;
+}
+
+.container-wrapping__card img:hover {
+    transform: scale(1.5);
+}
+
+/* ===== FOOTER ===== */
+footer {
+    padding: 20px;
+    text-align: left;
+    background-color: #203239;
+    color: white;
+}
