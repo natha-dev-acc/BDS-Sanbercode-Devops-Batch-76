@@ -1,0 +1,27 @@
+Penjelasan Tugas 6 – Setup VPS (Update & Swap Memory)
+
+1) Pada tahap awal, dilakukan proses update dan upgrade sistem 
+menggunakan perintah apt update && apt upgrade -y. 
+Saat proses upgrade berlangsung, muncul prompt terkait file konfigurasi SSH (sshd_config) yang telah dimodifikasi. 
+Pada kondisi ini dipilih opsi "keep the local version currently installed" 
+untuk menjaga konfigurasi SSH yang sudah ada agar tidak berubah 
+dan menghindari potensi error akses SSH.
+
+2) Setelah sistem berhasil diperbarui, dilanjutkan dengan pembuatan swap memory sebesar 2GB. 
+Proses dimulai dengan membuat file swap menggunakan fallocate -l 2G /swapfile, 
+kemudian mengatur permission dengan chmod 600 /swapfile 
+agar hanya root yang dapat mengakses file tersebut. 
+Selanjutnya file diformat menjadi swap menggunakan mkswap /swapfile 
+dan diaktifkan dengan swapon /swapfile.
+
+Agar swap tetap aktif setelah server reboot, 
+konfigurasi ditambahkan ke file /etc/fstab menggunakan perintah 
+echo '/swapfile none swap sw 0 0' | tee -a /etc/fstab.
+
+3) Tahap terakhir adalah verifikasi menggunakan perintah free -h. 
+Hasil menunjukkan bahwa swap sebesar 2.0Gi telah aktif, 
+yang menandakan proses setup swap berhasil dilakukan.
+
+Kesimpulan: Server telah berhasil diinisialisasi 
+dengan sistem yang up-to-date dan memiliki swap memory 
+sebagai cadangan RAM, sehingga lebih stabil untuk digunakan ke depannya.
