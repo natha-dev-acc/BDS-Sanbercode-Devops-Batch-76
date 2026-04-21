@@ -1,0 +1,36 @@
+Penjelasan Tugas 7 – SSH Hardening (Disable Password Login)
+
+1) Pada tahap awal, dilakukan konfigurasi SSH Key agar proses login ke VPS 
+dapat dilakukan tanpa menggunakan password. Public key dari lokal berhasil dikirim 
+ke server menggunakan ssh-copy-id, sehingga memungkinkan autentikasi berbasis key.
+
+Setelah itu dilakukan verifikasi dengan mencoba login ulang ke VPS 
+menggunakan perintah ssh root@IP. Hasilnya, login berhasil tanpa diminta password, 
+yang menandakan bahwa SSH key sudah terpasang dengan benar.
+
+2) Selanjutnya dilakukan proses hardening dengan menonaktifkan login menggunakan password. 
+Konfigurasi diubah dengan mengatur PasswordAuthentication no pada file SSH. 
+Namun, pada percobaan awal, login menggunakan password masih tetap bisa dilakukan. 
+Hal ini disebabkan oleh adanya konfigurasi tambahan pada direktori /etc/ssh/sshd_config.d/ 
+yang menimpa (override) pengaturan utama.
+
+Setelah dilakukan pengecekan menggunakan grep, ditemukan bahwa beberapa file 
+seperti 50-cloud-init.conf dan 60-cloudimg-settings.conf 
+masih mengaktifkan PasswordAuthentication yes. 
+Konfigurasi tersebut kemudian diperbaiki menggunakan perintah sed 
+agar seluruh pengaturan menjadi PasswordAuthentication no.
+
+Setelah melakukan restart service SSH, dilakukan verifikasi ulang 
+menggunakan perintah sshd -T. 
+Hasil menunjukkan bahwa passwordauthentication no telah aktif secara efektif.
+
+Tahap terakhir adalah pengujian login menggunakan metode password secara paksa
+menggunakan perintah ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no root@IP_VPS_KAMU. 
+Hasil menunjukkan pesan Permission denied (publickey), 
+yang menandakan bahwa login berbasis password telah berhasil dinonaktifkan 
+dan hanya autentikasi menggunakan SSH key yang diperbolehkan.
+
+Kesimpulan: Server telah berhasil diamankan dengan menerapkan SSH hardening, 
+yaitu hanya mengizinkan login menggunakan SSH key 
+dan menolak akses berbasis password. Hal ini meningkatkan keamanan server 
+terhadap serangan brute-force.
