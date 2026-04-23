@@ -1,0 +1,43 @@
+Penjelasan Tugas 9 – Reverse Proxy Nginx dengan Golang Backend
+
+Pada tugas ini dilakukan setup arsitektur sederhana menggunakan Nginx 
+sebagai reverse proxy dan aplikasi backend menggunakan Golang 
+yang berjalan di port 8080.
+
+Penjelasan Tugas 9 – Reverse Proxy Nginx dengan Golang Backend
+
+1) Langkah awal adalah menginstall Golang di VPS dan membuat file main.go 
+sebagai backend sederhana menggunakan library net/http. 
+Sebelum membuat file, dibuat terlebih dahulu direktori khusus aplikasi 
+dengan mkdir -p /var/www/app lalu masuk ke dalamnya.
+Tujuannya agar struktur project lebih rapi dan tidak bercampur dengan direktori /root.
+
+2) Backend kemudian dijalankan dengan go run main.go 
+dan diverifikasi menggunakan curl http://localhost:8080, 
+yang berhasil menampilkan response “Hello from Golang Backend!”.
+
+3) Selanjutnya dilakukan konfigurasi Nginx sebagai reverse proxy 
+dengan membuat file konfigurasi baru yang mengarahkan request 
+dari port 80 ke backend di port 8080 menggunakan proxy_pass.
+
+4) Setelah semua konfigurasi berjalan dengan baik, dilakukan verifikasi akhir 
+dengan mengakses IP VPS melalui browser dan memastikan response tetap sama, 
+yaitu “Hello from Golang Backend!”, yang menandakan bahwa request sudah melewati Nginx 
+sebagai reverse proxy sebelum diteruskan ke backend.
+
+*Perlu dipahami bahwa saat menjalankan go run main.go, proses akan berjalan terus di terminal
+(blocking). Jika terminal ditutup atau ditekan CTRL+C, maka backend akan berhenti. 
+Jika backend berhenti, maka Nginx tidak dapat meneruskan request 
+dan bisa menghasilkan error seperti 502 Bad Gateway. 
+
+Kendala: Pada percobaan awal, ketika mengakses IP VPS melalui browser, 
+yang tampil masih halaman HTML dari tugas sebelumnya (Tugas 8). 
+Hal ini terjadi karena Nginx masih menggunakan konfigurasi default 
+yang mengarah ke /var/www/html, sehingga reverse proxy belum aktif.
+
+Solusi: Masalah tersebut diselesaikan dengan menonaktifkan konfigurasi default Nginx (rm /etc/nginx/sites-enabled/default)
+dan memastikan hanya konfigurasi reverse proxy yang aktif. 
+Setelah dilakukan restart Nginx, akses melalui IP VPS berhasil menampilkan response dari Golang backend.
+
+Kesimpulannya: Reverse proxy berhasil diimplementasikan dengan baik 
+dimana Nginx berperan sebagai entry point yang meneruskan request ke backend Golang.
