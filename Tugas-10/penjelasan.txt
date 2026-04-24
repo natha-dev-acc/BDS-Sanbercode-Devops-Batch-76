@@ -1,0 +1,52 @@
+Penjelasan Tugas 10 – Process Manager (PM2 & systemd)
+
+Pada tugas ini dilakukan implementasi process manager agar aplikasi backend 
+tidak lagi bergantung pada terminal seperti pada tugas sebelumnya. 
+Pada Tugas 9, aplikasi dijalankan menggunakan go run main.go 
+sehingga akan berhenti ketika session SSH ditutup. 
+Oleh karena itu, pada tugas ini digunakan process manager 
+agar aplikasi dapat berjalan secara persistent.
+
+1) Langkah awal adalah menginstall Node.js dan dilanjutkan dengan menginstall PM2 
+sebagai process manager. Setelah itu, aplikasi Golang tidak langsung dijalankan, 
+tetapi terlebih dahulu di-build menjadi binary menggunakan go build -o app. 
+Pada tahap ini sempat terjadi kendala berupa error “go.mod file not found” 
+yang disebabkan karena project belum menggunakan Go Modules. 
+Masalah tersebut diselesaikan dengan menjalankan go mod init app, 
+kemudian proses build dapat berjalan dengan normal.
+
+2) Setelah berhasil membuat file binary, aplikasi dijalankan menggunakan PM2 
+dan diverifikasi melalui pm2 list dengan status online. 
+Selanjutnya dilakukan konfigurasi pm2 startup dan pm2 save 
+agar aplikasi tetap berjalan meskipun VPS direstart. 
+Setelah dilakukan reboot, aplikasi tetap berjalan dengan status online, 
+yang menandakan bahwa PM2 berhasil menjalankan aplikasi secara persistent. 
+Akses melalui browser juga tetap menampilkan “Hello from Golang Backend!”, 
+sehingga integrasi dengan Nginx tetap berjalan dengan baik.
+
+(Optional Challenge) dilakukan pendekatan lain menggunakan systemd 
+sebagai process manager bawaan Linux. Terlebih dahulu, dibuat sebuah service 
+yang mengarah langsung ke file binary aplikasi Golang, 
+kemudian dijalankan dan diaktifkan agar otomatis berjalan saat boot. 
+Hasil pengecekan menunjukkan bahwa service berada pada kondisi active (running), dan setelah dilakukan restart VPS,
+aplikasi tetap berjalan tanpa perlu intervensi manual.
+
+*Dalam proses pengerjaan, PM2 tidak dihapus agar dapat dibandingkan langsung 
+dengan systemd. Dari hasil pengamatan, PM2 menampilkan informasi process 
+secara detail seperti status, CPU, dan memory usage melalui perintah pm2 list, 
+sedangkan systemd menampilkan informasi melalui systemctl status 
+dengan detail process yang sedang berjalan di level sistem.
+
+Perbandingan: 
+- PM2 lebih mudah digunakan dan praktis karena 
+hanya membutuhkan command sederhana tanpa konfigurasi file tambahan, 
+namun bergantung pada Node.js sebagai dependency. 
+- Di sisi lain, systemd lebih kompleks karena memerlukan konfigurasi manual, 
+tetapi lebih ringan dan merupakan bagian native dari sistem Linux 
+sehingga lebih stabil untuk digunakan dalam environment production.
+
+Kesimpulan: 
+Kedua metode berhasil menjalankan aplikasi secara persistent.
+- PM2 lebih cocok untuk kemudahan dan kecepatan setup 
+- systemd lebih sesuai untuk implementasi production 
+yang lebih stabil dan minimal dependency
