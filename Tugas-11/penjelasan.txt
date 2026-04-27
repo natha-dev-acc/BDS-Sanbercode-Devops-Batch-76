@@ -1,0 +1,56 @@
+Penjelasan Tugas 11 – Install Database dan Memory Tuning pada VPS 512MB
+
+Pada tugas ini dilakukan proses instalasi database server 
+serta penerapan konfigurasi memory tuning agar tetap stabil pada VPS dengan resource terbatas. 
+Berbeda dengan tugas sebelumnya, pada tahap ini fokus utama bukan hanya 
+keberhasilan instalasi, tetapi bagaimana menjaga agar sistem tidak mengalami crash akibat keterbatasan RAM.
+
+Sebelum masuk ke tahap instalasi database, terdapat kendala awal yang cukup krusial 
+yaitu kondisi disk VPS yang hampir penuh hingga mencapai 100%. 
+Hal ini menyebabkan proses instalasi berpotensi gagal. Oleh karena itu dilakukan 
+proses pembersihan (cleansing) secara bertahap seperti menghapus cache, log lama, 
+serta file yang tidak terpakai termasuk sisa penggunaan PM2 dan Node.js pada tugas sebelumnya. 
+Proses ini tidak langsung berhasil dalam satu percobaan, 
+melainkan melalui beberapa kali pengecekan menggunakan perintah df -h dan du -sh 
+hingga akhirnya diperoleh ruang kosong yang cukup untuk melanjutkan instalasi. 
+Tahap ini menjadi penting karena tanpa ruang yang memadai, database tidak dapat diinstall 
+maupun dijalankan dengan normal.
+
+Setelah kondisi storage dinyatakan aman, dilakukan instalasi database engine 
+dengan memilih MariaDB karena lebih ringan dan cocok untuk VPS dengan RAM kecil. 
+Setelah instalasi selesai, dilakukan pengecekan status service 
+untuk memastikan database berjalan dengan baik.
+
+Tahap berikutnya adalah penggunaan AI untuk menentukan konfigurasi memory tuning. 
+Prompt yang digunakan sesuai dengan arahan dari trainer, yaitu meminta AI berperan 
+sebagai Senior DevOps Engineer dengan kondisi VPS spesifik, yaitu RAM 512MB, swap 2GB, 
+serta adanya service lain seperti Nginx dan Node.js (PM2). Dari prompt tersebut 
+diperoleh konfigurasi yang berfokus pada pembatasan penggunaan memory oleh database 
+agar tidak memicu OOM Killer.
+
+Konfigurasi yang dihasilkan menekankan beberapa parameter penting. 
+- innodb_buffer_pool_size dibatasi pada 64MB sebagai komponen utama penggunaan memory oleh engine InnoDB. 
+- max_connections diatur ke 20 untuk mencegah terlalu banyak koneksi yang dapat menghabiskan RAM. 
+- query_cache_size diset kecil agar tetap memberikan caching tanpa membebani sistem. 
+- Selain itu, parameter seperti tmp_table_size dan max_heap_table_size dibatasi 
+untuk menghindari penggunaan memory berlebih saat query berjalan. 
+Secara keseluruhan, konfigurasi ini bukan untuk performa maksimal, 
+melainkan untuk menjaga stabilitas sistem.
+
+Konfigurasi tersebut kemudian diterapkan ke dalam file konfigurasi MariaDB dan dilanjutkan 
+dengan proses restart service database. Setelah restart berhasil tanpa error, 
+dilakukan verifikasi untuk memastikan bahwa database berjalan normal 
+dan tidak membebani sistem secara berlebihan.
+
+Pada tahap akhir dilakukan pengujian dengan mengakses database menggunakan mysql -u root 
+serta pengecekan penggunaan memory menggunakan free -h. 
+Hasil menunjukkan bahwa database dapat berjalan dengan baik, 
+memory masih dalam batas aman, dan sistem tetap responsif 
+tanpa adanya indikasi penggunaan swap yang berlebihan.
+
+Kesimpulan: pada tugas ini tidak hanya berhasil menginstall database, 
+tetapi juga memahami pentingnya resource management pada VPS dengan spesifikasi kecil. 
+Penggunaan AI dalam menentukan konfigurasi terbukti membantu 
+dalam mendapatkan baseline yang aman, sementara proses troubleshooting 
+pada tahap awal memberikan pemahaman bahwa kondisi sistem (disk dan memory) 
+sangat mempengaruhi keberhasilan implementasi database.
