@@ -1,0 +1,22 @@
+"Kenapa sih kita harus rajin melakukan apt purge atau menghapus servis 
+yang nggak kepakai kayak MySQL/Postgres tadi sebelum kita instal SSL 
+dan rilis ke publik? 
+Apa hubungannya sama keamanan dan performa server?"
+
+Jawaban:
+
+Menghapus service yang tidak digunakan seperti database engine bertujuan 
+untuk mengoptimalkan resource dan meningkatkan keamanan server. 
+Pada VPS dengan RAM terbatas, service seperti MySQL atau PostgreSQL tetap memakan memory 
+walaupun tidak digunakan, sehingga berpotensi menyebabkan pemborosan resource 
+bahkan risiko OOM saat ada beban tambahan seperti proses SSL atau traffic user.
+
+Dari sisi keamanan, setiap service yang berjalan membuka potensi attack surface. 
+Database yang tidak digunakan tetap bisa menjadi target eksploitasi 
+jika tidak dikonfigurasi dengan baik. Dengan melakukan apt purge, 
+kita benar-benar menghapus service beserta konfigurasi dan dependensinya
+sehingga mengurangi celah keamanan.
+
+Kesimpulan: cleaning sebelum production memastikan server lebih ringan, stabil,
+dan memiliki permukaan serangan yang lebih kecil, yang sangat penting 
+sebelum aplikasi dipublikasikan ke internet dengan HTTPS.
