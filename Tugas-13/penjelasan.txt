@@ -1,0 +1,58 @@
+Penjelasan Tugas 13 – Implementasi CI/CD Sederhana Menggunakan GitHub Actions
+
+Pada tugas ini dilakukan implementasi dasar CI/CD pipeline menggunakan GitHub Actions
+dengan tujuan memahami konsep automasi serta penggunaan secret secara aman 
+dalam proses pipeline. Berbeda dengan tugas sebelumnya yang berfokus pada server 
+dan konfigurasi manual, pada tugas ini proses deployment mulai diarahkan 
+ke pendekatan otomatis berbasis event.
+
+Tahap awal dimulai dengan pembuatan file workflow dalam format YAML 
+menggunakan bantuan AI sesuai dengan arahan yang diberikan oleh trainer. 
+Prompt yang digunakan berisi instruksi untuk membuat pipeline sederhana 
+yang berjalan setiap kali terjadi push ke branch main. Dari hasil generate tersebut 
+diperoleh struktur workflow dengan satu job bernama Test-Pipeline yang berjalan 
+pada environment ubuntu-latest. Job ini terdiri dari dua langkah utama, 
+yaitu melakukan checkout code menggunakan actions/checkout 
+dan menjalankan script sederhana berupa perintah echo 
+untuk memastikan pipeline berjalan serta menampilkan nilai dari repository secret.
+
+Setelah file YAML berhasil dibuat, langkah berikutnya adalah menempatkan file tersebut 
+pada direktori yang sesuai, yaitu .github/workflows/main.yml. 
+*Pada tahap ini sempat terjadi kendala yang cukup krusial 
+karena file awalnya ditempatkan di dalam subfolder Tugas-13 
+sehingga tidak terdeteksi oleh sistem GitHub Actions. 
+Hal ini menyebabkan pada tab Actions tidak muncul workflow sama sekali 
+dan hanya menampilkan halaman “Get started with GitHub Actions”. 
+Masalah ini diselesaikan dengan memindahkan folder .github ke root repository 
+sehingga sesuai dengan standar struktur yang dikenali oleh GitHub.
+
+Tahap selanjutnya adalah melakukan konfigurasi repository secret 
+melalui menu Settings → Secrets and variables → Actions. 
+Dibuat sebuah secret dengan nama MY_SECRET_KEY yang nantinya akan dipanggil 
+di dalam workflow. Penggunaan secret ini bertujuan untuk mensimulasikan 
+praktik keamanan dalam CI/CD, di mana data sensitif tidak dituliskan secara langsung 
+di dalam kode, melainkan disimpan secara terpisah dan diakses secara aman 
+saat pipeline dijalankan.
+
+Setelah konfigurasi selesai, dilakukan proses commit dan push ke repository. 
+*Pada tahap ini kembali ditemukan kendala di mana workflow masih belum muncul 
+di tab Actions meskipun file YAML sudah berada di lokasi yang benar. 
+Setelah dilakukan analisis, diketahui bahwa GitHub Actions bekerja berdasarkan event, 
+sehingga workflow baru akan dijalankan ketika terjadi push setelah file workflow 
+berada pada lokasi yang valid. Solusi yang dilakukan adalah melakukan perubahan kecil 
+pada repository, kemudian commit dan push ulang untuk memicu event tersebut. 
+Setelah langkah ini dilakukan, workflow akhirnya muncul dan mulai berjalan.
+
+Pada tahap eksekusi pipeline, dilakukan pemantauan melalui tab Actions. 
+Proses awal ditandai dengan status running (kuning), kemudian berubah menjadi success (hijau) 
+setelah seluruh job berhasil dijalankan tanpa error. Pada bagian log terlihat output 
+sesuai dengan yang diharapkan, yaitu munculnya teks 
+“Pipeline Berjalan!” serta “Memeriksa secret key...”. 
+Nilai dari MY_SECRET_KEY juga berhasil dipanggil, namun secara otomatis disensor 
+oleh GitHub menjadi *** sebagai bentuk proteksi terhadap data sensitif.
+
+Kesimpulan: implementasi CI/CD sederhana menggunakan GitHub Actions berhasil dilakukan 
+dengan baik. Workflow dapat dijalankan secara otomatis, secret dapat digunakan 
+dengan aman, dan proses monitoring dapat dilakukan melalui tab Actions. 
+Tugas ini memberikan pemahaman dasar yang penting mengenai automasi pipeline 
+serta bagaimana sistem CI/CD bekerja dalam lingkungan pengembangan modern.
