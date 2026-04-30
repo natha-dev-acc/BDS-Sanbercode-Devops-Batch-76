@@ -20,9 +20,14 @@ jobs:
           echo "<h1>Ini adalah hasil build otomatis Artifact</h1>" > dist/index.html
           echo "Build selesai"
 
+      - name: Siapkan Struktur Artifact
+        run: |
+          mkdir artifact
+          cp -r dist artifact/
+
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: hasil-build-web
-          path: dist/
+          path: artifact/
           retention-days: 7
