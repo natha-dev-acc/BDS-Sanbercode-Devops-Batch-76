@@ -1,0 +1,39 @@
+Penjelasan Tugas 14 – Generate Build Artifact Menggunakan GitHub Actions
+
+Pada tugas ini dilakukan pengembangan lanjutan dari CI/CD 
+dengan menambahkan proses build dan menghasilkan artifact menggunakan GitHub Actions. 
+Tujuannya adalah memahami bagaimana proses build dijalankan di Cloud Runner 
+serta bagaimana hasil build dikemas menjadi artifact yang dapat diunduh.
+
+Tahap awal dilakukan dengan membuat file workflow build.yml menggunakan bantuan AI 
+sesuai instruksi trainer. Workflow ini berisi satu job bernama build-app 
+yang berjalan di ubuntu-latest dan mensimulasikan proses build 
+dengan membuat folder dist serta file index.html di dalamnya sebagai output sederhana.
+
+File tersebut kemudian ditempatkan pada direktori .github/workflows, 
+lalu dilakukan commit dan push untuk memicu pipeline. Setelah push, 
+workflow langsung berjalan di tab Actions dan berhasil mencapai status success 
+tanpa kendala pada proses eksekusi.
+
+Setelah proses build selesai, folder dist disimpan sebagai Build Artifact 
+menggunakan actions/upload-artifact dengan nama hasil-build-web 
+dan masa penyimpanan 7 hari. Artifact tersebut kemudian diunduh 
+dari halaman Summary pada workflow.
+
+*Kendala utama yang sempat ditemukan adalah struktur file di dalam artifact .zip 
+tidak sesuai ekspektasi, dimana file index.html muncul langsung di root 
+tanpa folder dist. Hal ini disebabkan oleh perilaku default GitHub Actions 
+yang terkadang melakukan flatten terhadap struktur folder saat mengemas artifact. 
+Masalah ini diselesaikan dengan menambahkan langkah tambahan 
+untuk membungkus folder dist ke dalam direktori baru sebelum di-upload, 
+sehingga struktur folder tetap terjaga saat di-download.
+
+Setelah perbaikan dilakukan dan pipeline dijalankan ulang, artifact berhasil diunduh 
+dengan struktur folder yang sesuai, yaitu terdapat folder dist yang berisi file index.html. 
+File tersebut kemudian dibuka di browser dan menampilkan hasil sesuai 
+dengan proses build yang telah dilakukan.
+
+Kesimpulan: proses build artifact menggunakan GitHub Actions berhasil diimplementasikan 
+dengan baik. Pipeline dapat menghasilkan output yang terstruktur, 
+artifact dapat diunduh dan digunakan, serta kendala terkait struktur file dalam .zip 
+dapat diatasi dengan penyesuaian pada workflow. 
