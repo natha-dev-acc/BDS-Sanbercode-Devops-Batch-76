@@ -1,0 +1,50 @@
+Penjelasan Tugas 15 – Implementasi Continuous Deployment ke VPS Menggunakan GitHub Actions
+
+Pada tugas ini dilakukan implementasi tahap lanjutan dari CI/CD yaitu Continuous Deployment (CD)
+dimana pipeline tidak hanya melakukan proses build tetapi juga secara otomatis 
+mendistribusikan hasil build (artifact) ke server VPS. Tujuan utama dari tahap ini adalah 
+menghilangkan proses deploy manual serta memastikan proses rilis aplikasi 
+berjalan secara konsisten, cepat, dan aman.
+
+1) Tahap awal dimulai dengan menyiapkan kredensial koneksi ke VPS berupa Host, Username, 
+dan SSH Private Key. Seluruh data sensitif tersebut disimpan menggunakan GitHub Secrets 
+sehingga tidak ada informasi rahasia yang dituliskan secara langsung (hardcoded) 
+di dalam file YAML. Pendekatan ini sesuai dengan best practice DevOps 
+dalam menjaga keamanan kredensial.
+
+2) Pipeline yang dibuat terdiri dari 2 job utama, yaitu build-app dan deploy-to-vps. 
+Job build-app bertugas menjalankan proses build di Cloud Runner dengan membuat folder dist 
+dan file index.html sebagai representasi hasil build, kemudian menyimpannya 
+sebagai artifact menggunakan fitur upload-artifact. Proses ini memastikan bahwa 
+VPS tidak terbebani oleh aktivitas komputasi berat karena seluruh proses build 
+dilakukan di environment terpisah.
+
+3) Selanjutnya, job deploy-to-vps dijalankan dengan ketergantungan terhadap build-app 
+menggunakan parameter needs sehingga deployment hanya akan dilakukan 
+jika proses build berhasil. Pada tahap ini, pipeline mengunduh artifact yang telah dibuat, 
+kemudian mentransfer file tersebut ke VPS menggunakan mekanisme SCP berbasis SSH Key. 
+Setelah proses transfer selesai, pipeline mengeksekusi perintah melalui SSH 
+untuk melakukan reload service Nginx agar perubahan dapat langsung diterapkan.
+
+*Dalam proses implementasi, ditemukan kendala saat mengakses domain dimana yang tampil 
+bukan hasil build terbaru, melainkan response dari backend lama (“Hello from Golang Backend!”), 
+bahkan sempat terjadi error 502 Bad Gateway. Setelah dilakukan analisis, 
+diketahui bahwa konfigurasi Nginx masih menggunakan proxy_pass ke service backend 
+pada port 8080 (sisa dari Tugas 10 sebelumnya) sehingga request dari user tidak diarahkan 
+ke file static hasil deployment melainkan ke aplikasi backend.
+
+**Masalah ini diselesaikan dengan melakukan penyesuaian konfigurasi Nginx, 
+yaitu menghapus directive proxy_pass dan menggantinya dengan root yang mengarah 
+ke direktori /var/www/html/dist. Dengan perubahan ini, Nginx berfungsi 
+sebagai static web server yang langsung menyajikan file hasil build dari pipeline CI/CD. Setelah dilakukan reload service, domain berhasil menampilkan hasil deployment terbaru sesuai dengan artifact yang dikirim dari GitHub Actions.
+
+4) Hasil akhir menunjukkan bahwa pipeline CI/CD telah berjalan end-to-end, 
+mulai dari proses build di Cloud Runner, penyimpanan artifact, 
+hingga proses deployment otomatis ke VPS. Website dapat diperbarui secara otomatis 
+setiap kali terjadi push ke branch utama, tanpa intervensi manual ke server.
+
+Kesimpulan: implementasi Continuous Deployment pada tugas ini berhasil dilakukan 
+dengan baik. Pipeline mampu mengotomatisasi proses distribusi aplikasi 
+ke server production secara aman dan efisien, serta memberikan pemahaman praktis 
+mengenai integrasi antara CI/CD, artifact, dan konfigurasi web server 
+dalam lingkungan production.
